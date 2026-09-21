@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADMIN FINAL 640+++ file-d7ce7 FIX</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#08080c;color:#fff;font-family:Arial;padding:12px;padding-bottom:100px}
+.header{background:linear-gradient(90deg,#ff0000,#ff8a00);padding:18px;border-radius:15px;text-align:center;border:2px solid #ff0000}
+.card{background:#15151e;border:1px solid #2a2a3a;border-radius:14px;padding:12px;margin:10px 0}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-weight:bold;margin:4px 0;cursor:pointer}
+.btn-green{background:#00c853;color:#fff}.btn-red{background:#ff1744;color:#fff}.btn-blue{background:#2962ff;color:#fff}.btn-orange{background:#ff6d00;color:#fff}.btn-dark{background:#222;color:#fff}
+input,textarea,select{width:100%;background:#0e0e14;border:1px solid #333;color:#fff;padding:12px;border-radius:10px;margin:6px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.filebox{border:2px dashed #00e676;padding:12px;border-radius:10px;text-align:center;margin:6px 0}
+.filebox2{border:2px dashed #ff8a00;padding:12px;border-radius:10px;text-align:center;margin:6px 0}
+.filebox-banner{border:2px dashed #ff00ff;padding:12px;border-radius:10px;text-align:center;margin:6px 0;background:#1a0e1a}
+.img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:8px;border:1px solid #333}
+.link-preview{background:#0e0e14;border:1px solid #00e676;border-radius:10px;padding:10px;margin:6px 0;word-break:break-all;font-size:11px}
+.banner-preview-item{position:relative;border:2px solid #ff00ff;border-radius:12px;overflow:hidden;margin:8px 0;background:#000}
+.banner-preview-item img{width:100%;height:160px;object-fit:cover}
+.banner-info{padding:8px;background:rgba(0,0,0,0.9)}
+.tabs-order{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
+.tab-o{flex:1;min-width:70px;padding:10px;border-radius:10px;text-align:center;font-size:11px;font-weight:bold;cursor:pointer;border:1px solid #333}
+.tab-o.active{background:linear-gradient(90deg,#ff0000,#ff8a00);color:#fff}.tab-o.inactive{background:#15151e;color:#aaa}
+.stat-box{background:#0e0e14;border:1px solid #333;border-radius:12px;padding:10px;text-align:center}
+.order-card{background:#15151e;border-left:4px solid #00e676;border-radius:12px;padding:10px;margin:8px 0;border:1px solid #2a2a3a}
+.order-card.pending{border-left-color:#ff8a00}.order-card.approved{border-left-color:#00e676}.order-card.rejected{border-left-color:#ff1744}
+.search-box{background:#0e0e14;border:2px solid #2962ff;border-radius:12px;padding:8px;margin:8px 0}
+</style>
+</head><body>
+<div class="header">
+<h1>👑 ADMIN FINAL 640+++ FIX</h1>
+<p>file-d7ce7 - LINK PER PRODUK LIVE</p>
+<small id="statusFirebase" style="color:#ffea00">⏳ Connecting Firebase file-d7ce7...</small><br>
+<small id="infoDB" style="color:#00e676">User 640+++ https-file-zero27pedia.vercel.app LIVE</small>
+</div>
+
+<div class="card" style="border:2px solid #2962ff">
+<h3 style="color:#2962ff">📊 STAT ORDER LIVE FIREBASE</h3>
+<div class="row3">
+<div class="stat-box"><b id="statTotal">0</b><br><small>Total</small></div>
+<div class="stat-box"><b id="statPending" style="color:#ff8a00">0</b><br><small>Pending</small></div>
+<div class="stat-box"><b id="statApproved" style="color:#00e676">0</b><br><small>ACC</small></div>
+</div>
+<div class="row" style="margin-top:8px">
+<div class="stat-box"><b id="statRejected" style="color:#ff1744">0</b><br><small>Ditolak</small></div>
+<div class="stat-box"><b id="statOmset" style="color:#ffea00">Rp 0</b><br><small>Omset</small></div>
+</div>
+</div>
+
+<div class="card" style="border:2px solid #ff00ff;background:linear-gradient(135deg,#1a0e1a,#0e0e14)">
+<h3 style="color:#ff00ff">🖼️ BANER FIREBASE 640+++</h3>
+<input type="hidden" id="b_idx" value="-1">
+<input id="b_title" placeholder="Judul Baner">
+<input id="b_sub" placeholder="Sub judul">
+<div class="row"><input id="b_link" placeholder="Link klik"><input id="b_prodId" type="number" placeholder="ID Produk"></div>
+<div class="filebox-banner">
+<b style="color:#ff00ff">📸 GAMBAR BANER</b><br>
+<input type="file" accept="image/*" id="b_gambar">
+<p id="bannerInfo">Upload</p>
+<img id="bannerPreview" style="display:none;width:100%;max-height:200px;border-radius:10px;margin-top:8px;object-fit:cover;border:2px solid #ff00ff">
+</div>
+<div class="row"><button class="btn btn-dark" id="btnResetBanner">RESET</button><button class="btn" style="background:#ff00ff;color:#fff" id="btnSaveBanner">SIMPAN BANER FIREBASE</button></div>
+</div>
+<div class="card" style="border:2px solid #ff00ff"><h3>BANER (<span id="bannerCount">0</span>)</h3><div id="bannerList"></div></div>
+
+<div class="card" style="border:2px solid #2962ff">
+<h3>💳 QRIS FIREBASE 640+++</h3>
+<div class="filebox"><b>Upload QRIS</b><br><input type="file" accept="image/*" id="qrisFile"><p id="qrisInfo">Belum ada</p><img id="qrisPreview" style="display:none;max-height:180px;margin-top:8px"></div>
+<input id="a_qrisName" value="Zero27Pedia OFFICIAL">
+<input id="a_wa" value="08xxxx">
+<button class="btn btn-blue" id="btnSaveQris">SIMPAN QRIS FIREBASE</button>
+</div>
+
+<div class="card" style="border:2px solid #ff8a00">
+<h3>🏷️ PRODUK 640+++ LINK PER PRODUK FIREBASE</h3>
+<input type="hidden" id="e_idx" value="-1">
+<input id="a_name" placeholder="Nama Produk">
+<div class="row"><div><input id="a_oldprice" type="number" placeholder="Harga Normal"><small>Normal</small></div><div><input id="a_price" type="number" placeholder="Harga Diskon"><small>Diskon</small></div></div>
+<div class="row"><input id="a_stock" type="number" value="100"><input id="a_label" placeholder="Label BEST/SELLER"></div>
+<div class="filebox2">
+<b>🖼️ GAMBAR PRODUK</b><br>
+<input type="file" accept="image/*" id="a_gambar">
+<p id="gambarInfo">Upload gambar</p>
+<img id="gambarPreview" style="display:none;max-height:220px;margin-top:8px">
+</div>
+<div class="card" style="border:2px solid #00e676;background:#0e0e14;margin:6px 0">
+<h3 style="color:#00e676">🔗 LINK DOWNLOAD WAJIB PER PRODUK 640+++</h3>
+<input id="a_link" type="url" placeholder="https://... link file produk ini - FIX 765+++">
+<div class="row"><button class="btn btn-dark" style="padding:8px;font-size:11px" id="btnConvert">CONVERT GDRIVE</button><button class="btn btn-dark" style="padding:8px;font-size:11px" id="btnTest">TEST LINK</button></div>
+<div id="linkPreview" class="link-preview" style="display:none"><b style="color:#00e676">Preview:</b><br><span id="linkPreviewText"></span></div>
+<input id="a_link2" type="url" placeholder="Link Cadangan (opsional)">
+<input id="a_linkPass" type="text" placeholder="Password file (opsional)">
+</div>
+<textarea id="a_desc" rows="3" placeholder="Deskripsi produk..."></textarea>
+<button class="btn btn-orange" id="btnSave">💾 SIMPAN PRODUK KE FIREBASE 640+++</button>
+<button class="btn btn-dark" id="btnReset">RESET FORM</button>
+</div>
+
+<div class="card"><h3>📦 PRODUK TERSIMPAN FIREBASE (<span id="countProd">0</span>) - LIVE 640+++</h3><div id="a_list">Memuat Firebase file-d7ce7...</div></div>
+
+<div class="card" style="border:3px solid #ffea00;background:linear-gradient(135deg,#1a1a00,#15151e)">
+<h3 style="color:#ffea00">📜 RIWAYAT ORDER LIVE FIREBASE 640+++</h3>
+<div class="search-box">
+<input id="searchOrder" placeholder="Cari nama / produk...">
+<div class="row" style="margin-top:6px">
+<button class="btn btn-dark" style="padding:8px;font-size:11px" id="btnExport">EXPORT CSV</button>
+<button class="btn btn-red" style="padding:8px;font-size:11px" id="btnHapusTolak">HAPUS DITOLAK</button>
+</div>
+</div>
+<div class="tabs-order">
+<div class="tab-o active" id="tabOrderAll">SEMUA (<span id="countAll">0</span>)</div>
+<div class="tab-o inactive" id="tabOrderPending">PENDING (<span id="countPendingTab">0</span>)</div>
+<div class="tab-o inactive" id="tabOrderApproved">ACC (<span id="countAccTab">0</span>)</div>
+<div class="tab-o inactive" id="tabOrderRejected">DITOLAK (<span id="countRejectedTab">0</span>)</div>
+</div>
+<div id="riwayatOrderList"></div>
+</div>
+
+<div class="card" style="border:2px solid #ff8a00"><h3>⚡ PENDING LIVE (<span id="pendingCount">0</span>) - ACC OTOMATIS KIRIM LINK</h3><div id="pendingList"></div></div>
+
+<script type="module">
+// === FIREBASE CONFIG FIX - SAMA PERSIS DENGAN USER 640+++ ===
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, update, remove, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAdaqbquQkTZeILPJI5sTOMgLrx0PxZVtk",
+  authDomain: "file-d7ce7.firebaseapp.com",
+  databaseURL: "https://file-d7ce7-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "file-d7ce7",
+  storageBucket: "file-d7ce7.firebasestorage.app",
+  messagingSenderId: "582881704672",
+  appId: "1:582881704672:web:69feddba7d711d8a21ee85"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let prods=[], qrisData=null, qrisTemp=null, curGambar=null, curBannerImg=null, banners=[], ordersMap={}, filterOrder='all', editBannerKey=null, editProdKey=null;
+
+function compress(file, cb, maxW=800, q=0.65){
+  if(!file) return;
+  let r=new FileReader(); r.onload=e=>{
+    let img=new Image(); img.onload=()=>{
+      let c=document.createElement('canvas'); let w=img.width,h=img.height;
+      if(w>maxW){h=h*(maxW/w); w=maxW;} c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h); cb(c.toDataURL('image/jpeg',q));
+    }; img.src=e.target.result;
+  }; r.readAsDataURL(file);
+}
+
+document.getElementById('a_gambar').addEventListener('change', e=>{
+  let f=e.target.files[0]; if(!f) return;
+  compress(f, data=>{curGambar=data; document.getElementById('gambarPreview').src=data; document.getElementById('gambarPreview').style.display='block'; document.getElementById('gambarInfo').innerText='✅ OK '+(data.length/1024).toFixed(0)+'KB';},800,0.65);
+});
+document.getElementById('b_gambar').addEventListener('change', e=>{
+  let f=e.target.files[0]; if(!f) return;
+  compress(f, data=>{curBannerImg=data; document.getElementById('bannerPreview').src=data; document.getElementById('bannerPreview').style.display='block'; document.getElementById('bannerInfo').innerText='✅ '+(data.length/1024).toFixed(0)+'KB';},800,0.7);
+});
+document.getElementById('qrisFile').addEventListener('change', e=>{
+  let f=e.target.files[0]; if(!f) return;
+  compress(f, data=>{qrisTemp=data; document.getElementById('qrisPreview').src=data; document.getElementById('qrisPreview').style.display='block'; document.getElementById('qrisInfo').innerText='✅ OK';},600,0.7);
+});
+
+document.getElementById('btnConvert').addEventListener('click', ()=>{
+  let link=document.getElementById('a_link').value.trim();
+  if(!link.includes('drive.google.com')) return alert('Bukan GDrive!');
+  let m=link.match(/\/d\/([a-zA-Z0-9-_]+)/); if(!m) return alert('ID tidak ketemu!');
+  let direct=`https://drive.google.com/uc?export=download&id=${m[1]}`;
+  document.getElementById('a_link').value=direct; document.getElementById('linkPreview').style.display='block'; document.getElementById('linkPreviewText').innerText=direct;
+});
+document.getElementById('btnTest').addEventListener('click', ()=>{
+  let link=document.getElementById('a_link').value.trim(); if(!link) return alert('Paste dulu!'); window.open(link,'_blank');
+});
+
+function resetForm(){document.getElementById('e_idx').value=-1; editProdKey=null; document.getElementById('a_name').value=''; document.getElementById('a_oldprice').value=''; document.getElementById('a_price').value=''; document.getElementById('a_stock').value=100; document.getElementById('a_label').value=''; document.getElementById('a_link').value=''; document.getElementById('a_link2').value=''; document.getElementById('a_linkPass').value=''; document.getElementById('a_desc').value=''; curGambar=null; document.getElementById('gambarPreview').style.display='none'; document.getElementById('linkPreview').style.display='none'; document.getElementById('btnSave').innerText='💾 SIMPAN PRODUK KE FIREBASE 640+++';}
+function resetBannerForm(){document.getElementById('b_idx').value=-1; editBannerKey=null; document.getElementById('b_title').value=''; document.getElementById('b_sub').value=''; document.getElementById('b_link').value=''; document.getElementById('b_prodId').value=''; curBannerImg=null; document.getElementById('bannerPreview').style.display='none'; document.getElementById('bannerInfo').innerText='Upload'; document.getElementById('btnSaveBanner').innerText='SIMPAN BANER FIREBASE';}
+document.getElementById('btnReset').addEventListener('click', resetForm);
+document.getElementById('btnResetBanner').addEventListener('click', resetBannerForm);
+
+document.getElementById('btnSave').addEventListener('click', async ()=>{
+  let name=document.getElementById('a_name').value.trim();
+  let price=document.getElementById('a_price').value.trim();
+  let link=document.getElementById('a_link').value.trim();
+  if(!name||!price) return alert('Nama & harga wajib!');
+  if(!link) return alert('Link wajib per produk!');
+  if(!curGambar &&!editProdKey) return alert('Upload gambar!');
+  if(!link.startsWith('http')) return alert('Link harus https://');
+  let btn=document.getElementById('btnSave'); btn.disabled=true; btn.innerText='⏳ Menyimpan Firebase...';
+  try{
+    let prod={id: editProdKey? prods.find(p=>p.fbKey==editProdKey)?.id || Date.now() : Date.now(), name:name, oldprice:parseInt(document.getElementById('a_oldprice').value)||0, price:parseInt(price), label:document.getElementById('a_label').value, desc:document.getElementById('a_desc').value, stock:parseInt(document.getElementById('a_stock').value)||100, fileLink:link, fileLink2:document.getElementById('a_link2').value.trim()||null, fileLinkPass:document.getElementById('a_linkPass').value.trim()||null, gambar:curGambar||prods.find(p=>p.fbKey==editProdKey)?.gambar, created:Date.now()};
+    if(editProdKey){ await update(ref(db,'products/'+editProdKey), prod); }else{ await push(ref(db,'products'), prod); }
+    resetForm(); alert('✅ Produk masuk Firebase file-d7ce7 640+++ LIVE!');
+  }catch(e){ alert('❌ GAGAL: '+e.message); }
+  finally{ btn.disabled=false; btn.innerText='💾 SIMPAN PRODUK KE FIREBASE 640+++'; }
+});
+
+document.getElementById('btnSaveBanner').addEventListener('click', async ()=>{
+  if(!document.getElementById('b_title').value.trim()) return alert('Judul wajib!');
+  if(!curBannerImg &&!editBannerKey) return alert('Upload gambar banner!');
+  let btn=document.getElementById('btnSaveBanner'); btn.disabled=true;
+  try{
+    let banner={title:document.getElementById('b_title').value.trim(), subtitle:document.getElementById('b_sub').value.trim()||'Promo', link:document.getElementById('b_link').value.trim()||'', productId:document.getElementById('b_prodId').value?parseInt(document.getElementById('b_prodId').value):null, img:curBannerImg||banners.find(b=>b.fbKey==editBannerKey)?.img, created:Date.now()};
+    if(editBannerKey){ await update(ref(db,'banners/'+editBannerKey), banner); }else{ await push(ref(db,'banners'), banner); }
+    resetBannerForm(); alert('✅ Banner Firebase OK 640+++');
+  }catch(e){ alert('Gagal banner: '+e.message); } finally{ btn.disabled=false; }
+});
+
+document.getElementById('btnSaveQris').addEventListener('click', async ()=>{
+  if(!qrisTemp &&!qrisData) return alert('Upload QRIS dulu');
+  try{ await set(ref(db,'qris'), {img:qrisTemp||qrisData.img, name:document.getElementById('a_qrisName').value, wa:document.getElementById('a_wa').value}); alert('✅ QRIS Firebase 640+++ OK!'); }catch(e){ alert('Gagal QRIS: '+e.message); }
+});
+
+onValue(ref(db,'products'), (snap)=>{
+  prods=[]; let list=document.getElementById('a_list');
+  if(snap.exists()){
+    let data=snap.val(); prods=Object.keys(data).map(k=>({...data[k], fbKey:k}));
+    let h=''; prods.forEach(p=>{
+      h+=`<div class="card" style="border-left:4px solid #00e676"><img src="${p.gambar}" class="img-prod"><b>${p.name} (ID:${p.id})</b><br><small style="color:#00e676">🔗 ${(p.fileLink||'').substring(0,45)}...</small><br><small>Stock ${p.stock} • Rp ${(p.price||0).toLocaleString('id-ID')}</small><br><div class="row"><button class="btn btn-dark" data-edit="${p.fbKey}">EDIT</button><button class="btn btn-red" data-del="${p.fbKey}">HAPUS</button></div></div>`;
+    });
+    list.innerHTML=h; document.getElementById('countProd').innerText=prods.length;
+    document.getElementById('statusFirebase').innerText=`✅ Firebase 640+++ LIVE - ${prods.length} Produk - User 640+++ terhubung`; document.getElementById('statusFirebase').style.color='#00e676';
+    list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editP(b.getAttribute('data-edit'))));
+    list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>delP(b.getAttribute('data-del'))));
+  }else{
+    list.innerHTML='<p style="text-align:center;padding:20px;color:#ff8a00">⚠️ 0 Produk - Isi form di atas</p>';
+    document.getElementById('countProd').innerText=0;
+  }
+});
+
+onValue(ref(db,'banners'), (snap)=>{
+  banners=[]; if(snap.exists()){ let data=snap.val(); banners=Object.keys(data).map(k=>({...data[k], fbKey:k})); }
+  renderBanners();
+});
+onValue(ref(db,'qris'), (snap)=>{ if(snap.exists()){ qrisData=snap.val(); document.getElementById('qrisPreview').src=qrisData.img; document.getElementById('qrisPreview').style.display='block'; document.getElementById('qrisInfo').innerText='QRIS Firebase aktif 640+++'; } });
+onValue(ref(db,'orders'), (snap)=>{
+  ordersMap={}; if(snap.exists()) ordersMap=snap.val();
+  renderRiwayatOrder();
+});
+
+function renderBanners(){
+  let h=''; banners.forEach(b=>{
+    h+=`<div class="banner-preview-item"><img src="${b.img}"><div class="banner-info"><b style="color:#ff00ff">${b.title}</b><br><small>${b.subtitle}</small><br><div class="row" style="margin-top:6px"><button class="btn btn-dark" data-editb="${b.fbKey}">EDIT</button><button class="btn btn-red" data-delb="${b.fbKey}">HAPUS</button></div></div></div>`;
+  });
+  document.getElementById('bannerList').innerHTML=h||'Belum ada'; document.getElementById('bannerCount').innerText=banners.length;
+  document.getElementById('bannerList').querySelectorAll('[data-editb]').forEach(b=>b.addEventListener('click', ()=>editBanner(b.getAttribute('data-editb'))));
+  document.getElementById('bannerList').querySelectorAll('[data-delb]').forEach(b=>b.addEventListener('click', ()=>delBanner(b.getAttribute('data-delb'))));
+}
+function editP(fbKey){let p=prods.find(x=>x.fbKey==fbKey);if(!p) return;editProdKey=fbKey;document.getElementById('a_name').value=p.name;document.getElementById('a_oldprice').value=p.oldprice;document.getElementById('a_price').value=p.price;document.getElementById('a_stock').value=p.stock;document.getElementById('a_label').value=p.label||'';document.getElementById('a_desc').value=p.desc||'';document.getElementById('a_link').value=p.fileLink||'';document.getElementById('a_link2').value=p.fileLink2||'';document.getElementById('a_linkPass').value=p.fileLinkPass||'';curGambar=p.gambar;document.getElementById('gambarPreview').src=p.gambar;document.getElementById('gambarPreview').style.display='block';window.scrollTo(0,0);document.getElementById('btnSave').innerText='UPDATE PRODUK FIREBASE 640+++';}
+async function delP(fbKey){if(!confirm('Hapus produk Firebase?')) return; await remove(ref(db,'products/'+fbKey));}
+function editBanner(fbKey){let b=banners.find(x=>x.fbKey==fbKey);if(!b) return;editBannerKey=fbKey;document.getElementById('b_title').value=b.title;document.getElementById('b_sub').value=b.subtitle;document.getElementById('b_link').value=b.link||'';document.getElementById('b_prodId').value=b.productId||'';curBannerImg=b.img;document.getElementById('bannerPreview').src=b.img;document.getElementById('bannerPreview').style.display='block';window.scrollTo(0,0);}
+async function delBanner(fbKey){if(!confirm('Hapus banner?')) return; await remove(ref(db,'banners/'+fbKey));}
+
+function renderRiwayatOrder(){
+ let search=(document.getElementById('searchOrder').value||'').toLowerCase();
+ let allKeys=Object.keys(ordersMap);
+ let filtered=allKeys.map(k=>({...ordersMap[k], fbKey:k})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(filterOrder!=='all') filtered=filtered.filter(o=>o.status===filterOrder);
+ if(search) filtered=filtered.filter(o=> (o.product?.toLowerCase().includes(search)) || (o.userName?.toLowerCase().includes(search)) );
+ document.getElementById('countAll').innerText=allKeys.length;
+ document.getElementById('countPendingTab').innerText=Object.values(ordersMap).filter(o=>o.status==='pending').length;
+ document.getElementById('countAccTab').innerText=Object.values(ordersMap).filter(o=>o.status==='approved').length;
+ document.getElementById('countRejectedTab').innerText=Object.values(ordersMap).filter(o=>o.status==='rejected').length;
+ document.getElementById('statTotal').innerText=allKeys.length;
+ document.getElementById('statPending').innerText=Object.values(ordersMap).filter(o=>o.status==='pending').length;
+ document.getElementById('statApproved').innerText=Object.values(ordersMap).filter(o=>o.status==='approved').length;
+ document.getElementById('statRejected').innerText=Object.values(ordersMap).filter(o=>o.status==='rejected').length;
+ let omset=Object.values(ordersMap).filter(o=>o.status==='approved').reduce((a,b)=>a+(parseInt(b.price)||0),0);
+ document.getElementById('statOmset').innerText='Rp '+omset.toLocaleString('id-ID');
+ let div=document.getElementById('riwayatOrderList');
+ if(filtered.length===0){div.innerHTML=`<p style="text-align:center;color:#888;padding:20px">Tidak ada order - ${filterOrder}</p>`;return;}
+ let h='';
+ filtered.forEach(o=>{
+   let color=o.status==='pending'?'#ff8a00':o.status==='approved'?'#00e676':'#ff1744';
+   let text=o.status==='pending'?'PENDING':o.status==='approved'?'DI-ACC':'DITOLAK';
+   h+=`<div class="order-card ${o.status}"><b>${o.product}</b> <small style="background:${color};color:#000;padding:2px 6px;border-radius:10px;font-size:9px">${text}</small><br><small>👤 ${o.userName||''} • Rp ${parseInt(o.price||0).toLocaleString('id-ID')}</small><br><img src="${o.bukti||''}" style="max-height:120px;border-radius:8px"><br><div class="row" style="margin-top:8px">${o.status==='pending'?`<button class="btn btn-green" data-acc="${o.fbKey}">✅ ACC & KIRIM LINK ${o.product}</button><button class="btn btn-red" data-tolak="${o.fbKey}">❌ TOLAK</button>`:`<button class="btn btn-blue" data-lihat="${o.fbKey}">LIHAT LINK</button><button class="btn btn-dark" data-hapus="${o.fbKey}">HAPUS</button>`}</div></div>`;
+ });
+ div.innerHTML=h;
+ div.querySelectorAll('[data-acc]').forEach(b=>b.addEventListener('click', ()=>accOrderFirebase(b.getAttribute('data-acc'))));
+ div.querySelectorAll('[data-tolak]').forEach(b=>b.addEventListener('click', ()=>tolakOrderFirebase(b.getAttribute('data-tolak'))));
+ div.querySelectorAll('[data-lihat]').forEach(b=>b.addEventListener('click', ()=>lihatLinkOrder(b.getAttribute('data-lihat'))));
+ div.querySelectorAll('[data-hapus]').forEach(b=>b.addEventListener('click', ()=>hapusOrderFirebase(b.getAttribute('data-hapus'))));
+
+ let pend=allKeys.map(k=>({...ordersMap[k], fbKey:k})).filter(o=>o.status==='pending');
+ document.getElementById('pendingCount').innerText=pend.length;
+ let ph='';
+ pend.forEach(o=>{ph+=`<div class="card" style="border:1px solid #ff9800"><b>${o.product}</b> - Rp ${o.price}<br><small>${o.time||''} - ${o.userName||''}</small><br><img src="${o.bukti||''}" style="max-height:180px"><br><div class="row"><button class="btn btn-green" data-acc2="${o.fbKey}">ACC & KIRIM LINK</button><button class="btn btn-red" data-tolak2="${o.fbKey}">TOLAK</button></div></div>`});
+ let pDiv=document.getElementById('pendingList'); pDiv.innerHTML=ph||'Tidak ada pending';
+ pDiv.querySelectorAll('[data-acc2]').forEach(b=>b.addEventListener('click', ()=>accOrderFirebase(b.getAttribute('data-acc2'))));
+ pDiv.querySelectorAll('[data-tolak2]').forEach(b=>b.addEventListener('click', ()=>tolakOrderFirebase(b.getAttribute('data-tolak2'))));
+}
+
+async function accOrderFirebase(fbKey){
+ let o=ordersMap[fbKey]; if(!o) return;
+ let prod = prods.find(p=>p.id==o.productId) || prods.find(p=>p.name==o.product);
+ if(!prod){
+   await update(ref(db,'orders/'+fbKey), {status:'approved', accTime:new Date().toLocaleString('id-ID')});
+   alert('✅ ACC! Pakai link lama');
+   return;
+ }
+ try{
+   await update(ref(db,'products/'+prod.fbKey), {stock: Math.max(0,(prod.stock||0)-1)});
+   await update(ref(db,'orders/'+fbKey), {status:'approved', downloadLink: prod.fileLink, accTime: new Date().toLocaleString('id-ID')});
+   alert(`✅ ACC BERHASIL 640+++!\nProduk: ${prod.name}\nLink per produk: ${prod.fileLink}\nUser 640+++ OTOMATIS dapat link!`);
+ }catch(e){alert('Gagal ACC: '+e.message);}
+}
+async function tolakOrderFirebase(fbKey){ if(!confirm('Tolak?')) return; await update(ref(db,'orders/'+fbKey), {status:'rejected'}); }
+async function hapusOrderFirebase(fbKey){ if(!confirm('Hapus permanen?')) return; await remove(ref(db,'orders/'+fbKey)); }
+function lihatLinkOrder(fbKey){ let o=ordersMap[fbKey]; if(!o) return; let link=o.downloadLink||''; alert(`Produk: ${o.product}\nLink: ${link}`); if(link) window.open(link,'_blank'); }
+
+document.getElementById('searchOrder').addEventListener('input', renderRiwayatOrder);
+document.getElementById('tabOrderAll').addEventListener('click', ()=>{filterOrder='all'; document.querySelectorAll('.tab-o').forEach(t=>{t.classList.remove('active');t.classList.add('inactive');}); document.getElementById('tabOrderAll').classList.add('active'); renderRiwayatOrder();});
+document.getElementById('tabOrderPending').addEventListener('click', ()=>{filterOrder='pending'; document.querySelectorAll('.tab-o').forEach(t=>{t.classList.remove('active');t.classList.add('inactive');}); document.getElementById('tabOrderPending').classList.add('active'); renderRiwayatOrder();});
+document.getElementById('tabOrderApproved').addEventListener('click', ()=>{filterOrder='approved'; document.querySelectorAll('.tab-o').forEach(t=>{t.classList.remove('active');t.classList.add('inactive');}); document.getElementById('tabOrderApproved').classList.add('active'); renderRiwayatOrder();});
+document.getElementById('tabOrderRejected').addEventListener('click', ()=>{filterOrder='rejected'; document.querySelectorAll('.tab-o').forEach(t=>{t.classList.remove('active');t.classList.add('inactive');}); document.getElementById('tabOrderRejected').classList.add('active'); renderRiwayatOrder();});
+document.getElementById('btnExport').addEventListener('click', ()=>{
+  let csv='ID,Produk,Price,User,Status,Link\n';
+  Object.values(ordersMap).forEach(o=>{ csv+=`${o.id||''},"${o.product}",${o.price},"${o.userName||''}",${o.status},"${o.downloadLink||''}"\n`; });
+  let blob=new Blob([csv],{type:'text/csv'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download=`riwayat_640_${Date.now()}.csv`; a.click();
+});
+document.getElementById('btnHapusTolak').addEventListener('click', async ()=>{
+  if(!confirm('Hapus yang DITOLAK?')) return;
+  let keys=Object.keys(ordersMap).filter(k=>ordersMap[k].status=='rejected');
+  for(let k of keys){ await remove(ref(db,'orders/'+k)); }
+});
+</script>
+</body></html>
