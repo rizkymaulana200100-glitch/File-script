@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USER 100% FIREBASE - file-d7ce7 - QRIS + RATING + PROFILE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#08080c;color:#fff;font-family:Arial;padding:10px;padding-bottom:85px}
+.header{background:linear-gradient(90deg,#ff0000,#ff8a00);padding:16px;border-radius:16px;text-align:center;border:2px solid #ff0000;margin-bottom:10px}
+.user-bar{display:flex;justify-content:space-between;align-items:center;background:#0e0e14;border:1px solid #2a2a3a;border-radius:12px;padding:8px 12px;margin-bottom:10px}
+.user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #ff8a00}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#15151e;border:1px solid #2a2a3a;border-radius:14px;overflow:hidden;position:relative}
+.img-wrap{position:relative;width:100%;height:170px;background:#0e0e14;overflow:hidden}
+.img-wrap img{width:100%;height:100%;object-fit:cover}
+.badge-stock{position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:bold}
+.badge-link{position:absolute;bottom:8px;left:8px;background:#00e676;color:#000;padding:3px 7px;border-radius:10px;font-size:10px;font-weight:bold}
+.btn{width:100%;padding:10px;border:none;border-radius:10px;font-weight:bold;margin-top:6px;cursor:pointer}
+.btn-buy{background:linear-gradient(90deg,#ff0000,#ff8a00);color:#fff}.btn-green{background:#00c853;color:#fff}.btn-dark{background:#222;color:#fff}.btn-blue{background:#2962ff;color:#fff}.btn-red{background:#ff1744;color:#fff}.btn-orange{background:#ff8a00;color:#000}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:99;align-items:center;justify-content:center;padding:15px}.modal.active{display:flex}
+.modal-box{background:#15151e;border:1px solid #333;border-radius:16px;padding:16px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto}
+.qris-img{width:100%;border-radius:12px;margin:10px 0;border:2px solid #2962ff;min-height:150px;background:#222;display:block;object-fit:contain}
+.filebox{border:2px dashed #00e676;padding:12px;border-radius:10px;text-align:center;margin:10px 0}
+.filebox-orange{border:2px dashed #ff8a00;padding:12px;border-radius:10px;text-align:center;margin:10px 0}
+input, textarea, select{width:100%;background:#0e0e14;border:1px solid #333;color:#fff;padding:12px;border-radius:10px;margin:6px 0}
+.loading{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column}.loading.active{display:flex}
+.link-box{background:#0e0e14;border:2px solid #00e676;border-radius:12px;padding:12px;margin:10px 0;word-break:break-all}
+.tabs-auth{display:flex;gap:6px;margin-bottom:10px}.tab-a{flex:1;padding:10px;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer;border:1px solid #333}.tab-a.active{background:#2962ff;color:#fff}.tab-a.inactive{background:#222;color:#aaa}
+.tabs-riwayat,.tabs-detail{display:flex;gap:6px;margin:10px 0}.tab-r,.tab-d{flex:1;padding:10px;border-radius:10px;text-align:center;font-size:12px;font-weight:bold;cursor:pointer;border:1px solid #333;transition:0.2s}.tab-r.active,.tab-d.active{background:linear-gradient(90deg,#ff0000,#ff8a00);color:#fff}.tab-r.inactive,.tab-d.inactive{background:#15151e;color:#aaa}
+.waiting-anim{width:60px;height:60px;border:4px solid #222;border-top:4px solid #ff8a00;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#15151e;border-top:2px solid #ff0000;display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:95;border-radius:18px 18px 0 0}
+.nav-item{flex:1;text-align:center;padding:8px 2px;cursor:pointer;border-radius:12px;margin:0 6px;transition:0.2s}
+.nav-item.active{background:linear-gradient(90deg,#ff0000,#ff8a00);color:#fff;transform:translateY(-6px);box-shadow:0 6px 15px rgba(255,0,0,0.5)}
+.nav-item.inactive{color:#888}
+.nav-icon{font-size:22px;display:block}.nav-label{font-size:10px;font-weight:bold;margin-top:2px}
+.view{display:none}.view.active{display:block}
+.profile-card{background:linear-gradient(135deg,#1a1a28,#0e0e14);border:1px solid #2a2a3a;border-radius:16px;padding:16px;margin:10px 0}
+.profile-avatar-big{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #ff8a00;cursor:pointer}
+.stat-row{display:flex;gap:8px;margin:12px 0}.stat-box{flex:1;background:#0e0e14;border:1px solid #333;border-radius:12px;padding:10px;text-align:center}
+.history-card{background:#15151e;border:1px solid #2a2a3a;border-left:4px solid #00e676;border-radius:12px;padding:12px;margin:8px 0}
+.history-card.pending{border-left-color:#ff8a00}.history-card.approved{border-left-color:#00e676}
+.help-fab{position:fixed;bottom:85px;right:16px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 15px rgba(37,211,102,0.5);z-index:94;cursor:pointer;animation:pulse-wa 2s infinite}
+@keyframes pulse-wa{0%{box-shadow:0 0 0 0 rgba(37,211,102,0.7)}70%{box-shadow:0 0 0 15px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.help-option{display:flex;align-items:center;gap:12px;background:#0e0e14;border:1px solid #2a2a3a;border-radius:12px;padding:14px;margin:8px 0;cursor:pointer}
+.help-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold}
+.ulasan-card{background:#0e0e14;border:1px solid #2a2a3a;border-radius:12px;padding:10px;margin:8px 0;display:flex;gap:10px}
+.ulasan-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #ff8a00;flex-shrink:0}
+.ulasan-img-thumb{width:60px;height:60px;border-radius:8px;object-fit:cover;border:1px solid #444;cursor:pointer;margin:4px 4px 0 0;transition:0.2s}
+.ulasan-img-thumb:hover{transform:scale(1.1);border-color:#ff8a00}
+.upload-preview{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.upload-item{position:relative}
+.upload-remove{position:absolute;top:-6px;right:-6px;background:#ff1744;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+.banner-container{position:relative;width:100%;height:170px;border-radius:16px;overflow:hidden;border:2px solid #ff0000;margin-bottom:10px;background:#0e0e14}
+.banner-track{display:flex;height:100%;transition:transform 0.5s ease-in-out}
+.banner-slide{min-width:100%;height:100%;position:relative;cursor:pointer}
+.banner-slide img{width:100%;height:100%;object-fit:cover}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.8) 0%,transparent 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.banner-title{font-weight:bold;font-size:16px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.8)}
+.banner-sub{font-size:11px;color:#ffea00;margin-top:2px}
+.banner-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.banner-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);cursor:pointer;transition:0.3s}
+.banner-dot.active{background:#ff8a00;width:20px;border-radius:10px}
+.banner-badge{position:absolute;top:10px;left:10px;background:linear-gradient(90deg,#ff0000,#ff8a00);color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:bold;z-index:2}
+.banner-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;font-weight:bold}
+.banner-arrow.prev{left:10px}.banner-arrow.next{right:10px}
+</style></head><body>
+<div class="loading active" id="loadingBox"><h2>⏳ Memuat Firebase 100%...</h2><small id="firebaseStatus">Connecting file-d7ce7...</small></div>
+<div class="user-bar" id="userBar">
+<div id="userInfo" style="display:flex;align-items:center;gap:8px"><b>👤 Belum Login</b></div>
+<div><button class="btn btn-blue" id="btnAuth" style="padding:8px 14px;width:auto" onclick="openAuth()">LOGIN</button></div>
+</div>
+<div class="view active" id="viewBeranda">
+<div class="banner-container" id="bannerContainer">
+<div class="banner-track" id="bannerTrack">
+<div class="banner-slide" style="background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;text-align:center">
+<div><h1>🔥 Zero27Pedia STORE LINK 🔥</h1><p id="totalProdukBanner" style="margin-top:4px;font-size:13px">Firebase 100%...</p></div>
+</div>
+</div>
+<div class="banner-arrow prev" onclick="prevBanner()">‹</div>
+<div class="banner-arrow next" onclick="nextBanner()">›</div>
+<div class="banner-dots" id="bannerDots"></div>
+</div>
+<div style="background:#15151e;border:1px solid #333;border-radius:12px;padding:10px;margin-bottom:10px;text-align:center"><small style="color:#00e676">📢 100% Firebase - Link per produk LIVE - QRIS FIX</small><br><b id="totalProduk" style="color:#ff8a00">Memuat Firebase...</b></div>
+<div class="grid" id="produkGrid"></div>
+</div>
+<div class="view" id="viewRiwayat">
+<div class="header"><h1>📦 Riwayat Pembelian</h1><p id="riwayatCount">0 Transaksi - Firebase</p></div>
+<div class="tabs-riwayat">
+<div class="tab-r active" id="tabAll" onclick="filterRiwayat('all')">📦 SEMUA</div>
+<div class="tab-r inactive" id="tabPending" onclick="filterRiwayat('pending')">⏳ PENDING</div>
+<div class="tab-r inactive" id="tabApproved" onclick="filterRiwayat('approved')">✅ BERHASIL</div>
+</div>
+<div style="background:#0e0e14;border:1px solid #00e676;border-radius:10px;padding:8px;margin-bottom:10px">
+<small style="color:#00e676">🔗 100% Firebase - Link sesuai produk - Lancar</small><br>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+<button class="btn btn-dark" style="padding:8px;font-size:11px" onclick="renderRiwayat()">🔄 REFRESH FIREBASE</button>
+<button class="btn btn-red" style="padding:8px;font-size:11px" onclick="bersihkanRiwayat()">🗑️ BERSIHKAN LOCAL</button>
+</div>
+</div>
+<div id="riwayatList"></div>
+</div>
+<div class="view" id="viewProfile">
+<div class="header"><h1>👤 Profile - Firebase 100%</h1><p id="profileEmail">Belum Login - Firebase</p></div>
+<div id="profileContent"></div>
+<div style="margin-top:12px"><button class="btn btn-green" style="background:#25D366" onclick="openHelp()">💬 BUTUH BANTUAN?</button></div>
+</div>
+<div class="modal" id="modalAuth"><div class="modal-box">
+<h2 style="text-align:center">👤 Akun - Firebase</h2>
+<div class="tabs-auth"><div class="tab-a active" id="tabLogin" onclick="switchAuth('login')">LOGIN</div><div class="tab-a inactive" id="tabDaftar" onclick="switchAuth('daftar')">DAFTAR</div></div>
+<div id="secLogin"><input id="loginEmail" type="email" placeholder="Email"><input id="loginPass" type="password" placeholder="Password"><button class="btn btn-blue" onclick="doLogin()">LOGIN FIREBASE</button></div>
+<div id="secDaftar" style="display:none"><input id="regNama" placeholder="Nama"><input id="regEmail" type="email" placeholder="Email"><input id="regPass" type="password" placeholder="Password"><input id="regPass2" type="password" placeholder="Ulang"><button class="btn btn-green" onclick="doRegister()">DAFTAR FIREBASE</button></div>
+<button class="btn btn-dark" onclick="closeAuth()">TUTUP</button></div></div>
+<div class="modal" id="modalEditProfile"><div class="modal-box" style="border:2px solid #ff8a00">
+<h2 style="text-align:center;color:#ff8a00">✏️ EDIT PROFILE FIREBASE</h2>
+<div style="text-align:center;margin:10px 0">
+<img id="editAvatarPreview" src="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #ff8a00;display:none;margin:0 auto 8px">
+<div id="editAvatarPlaceholder" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 8px">👤</div>
+<input type="file" accept="image/*" onchange="setEditAvatar(this)" style="font-size:12px">
+<small style="color:#aaa">Upload foto - Firebase 100%</small>
+</div>
+<input id="editNama" placeholder="Nama Baru">
+<input id="editEmail" type="email" placeholder="Email Baru">
+<input id="editPass" type="password" placeholder="Password Baru (kosongkan jika tidak ganti)">
+<input id="editPass2" type="password" placeholder="Ulang Password Baru">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button class="btn btn-dark" onclick="closeEditProfile()">BATAL</button>
+<button class="btn btn-orange" onclick="saveEditProfile()">💾 SIMPAN FIREBASE</button>
+</div>
+</div></div>
+<div class="modal" id="modalHelp"><div class="modal-box" style="border:2px solid #25D366">
+<h2 style="text-align:center;color:#25D366">💬 Butuh Bantuan?</h2>
+<div class="help-option" onclick="hubungiWA()"><div class="help-icon" style="background:#25D366">💬</div><div style="flex:1"><b style="color:#25D366">WhatsApp</b><br><small style="color:#aaa"><span id="waNumberText">123456789</span></small></div><div>➜</div></div>
+<div class="help-option" onclick="hubungiDiscord()"><div class="help-icon" style="background:#5865F2">🎮</div><div style="flex:1"><b style="color:#5865F2">Discord</b></div><div>➜</div></div>
+<div class="help-option" onclick="hubungiApp()"><div class="help-icon" style="background:linear-gradient(90deg,#ff0000,#ff8a00)">📩</div><div style="flex:1"><b style="color:#ff8a00">Bantuan di Aplikasi</b></div><div>➜</div></div>
+<button class="btn btn-dark" style="margin-top:12px" onclick="closeHelp()">TUTUP</button>
+</div></div>
+<div class="modal" id="modalHelpApp"><div class="modal-box" style="border:2px solid #ff8a00">
+<h2 style="text-align:center;color:#ff8a00">📩 Bantuan di Aplikasi - Firebase</h2>
+<input id="helpNama" placeholder="Nama kamu">
+<input id="helpEmail" placeholder="Email / WA kamu">
+<textarea id="helpPesan" rows="4" placeholder="Tulis keluhan..."></textarea>
+<select id="helpKategori"><option value="order">📦 Order</option><option value="link">🔗 Link</option><option value="akun">👤 Akun</option><option value="lain">💬 Lainnya</option></select>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button class="btn btn-dark" onclick="closeHelpApp()">BATAL</button>
+<button class="btn btn-orange" onclick="kirimHelpApp()">📤 KIRIM FIREBASE</button>
+</div>
+</div></div>
+<div class="modal" id="modalBeli"><div class="modal-box">
+<h3 id="m_nama" style="text-align:center"></h3>
+<div style="text-align:center"><b id="m_price" style="color:#00e676"></b> <small id="m_stock"></small><br><small id="m_ratingAvg" style="color:#ffea00"></small></div>
+<img id="m_gambar" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin:8px 0">
+<div class="tabs-detail"><div class="tab-d active" id="tabBeli" onclick="switchDetail('beli')">💳 BELI - QRIS FIREBASE</div><div class="tab-d inactive" id="tabUlasan" onclick="switchDetail('ulasan')">⭐ ULASAN (<span id="ulasanCountTab">0</span>)</div></div>
+<div id="secBeli">
+<div style="background:#0e0e14;padding:10px;border-radius:10px;border:2px solid #2962ff;text-align:center"><b>💳 BAYAR VIA QRIS FIREBASE 100% - FIX</b><br><img id="m_qris" class="qris-img" alt="QRIS Firebase"><small id="qrisNameText" style="color:#00e676;font-weight:bold"></small><br><small id="qrisDebug" style="color:#ffea00">Menunggu QRIS Firebase file-d7ce7...</small></div>
+<div class="filebox"><b>📤 Upload Bukti Transfer</b><br><input type="file" accept="image/*" onchange="setBukti(this)"><p id="buktiInfo">Upload bukti</p><img id="buktiPreview" style="display:none;max-height:180px;border-radius:10px;margin-top:6px"></div>
+<button class="btn btn-buy" id="btnKirimBukti" onclick="kirimBukti()">🚀 KIRIM BUKTI FIREBASE</button>
+</div>
+<div id="secUlasan" style="display:none">
+<div style="background:#0e0e14;border:1px solid #333;border-radius:12px;padding:10px;margin-bottom:10px">
+<b style="color:#ff8a00">✍️ Tulis Ulasan Firebase 100%</b>
+<div style="display:flex;gap:4px;margin:8px 0"><span style="font-size:28px;cursor:pointer" onclick="setRating(1)" id="star1">☆</span><span style="font-size:28px;cursor:pointer" onclick="setRating(2)" id="star2">☆</span><span style="font-size:28px;cursor:pointer" onclick="setRating(3)" id="star3">☆</span><span style="font-size:28px;cursor:pointer" onclick="setRating(4)" id="star4">☆</span><span style="font-size:28px;cursor:pointer" onclick="setRating(5)" id="star5">☆</span><small id="ratingText" style="margin-left:8px;color:#ffea00"></small></div>
+<textarea id="ulasanText" rows="3" placeholder="Tulis pengalaman kamu pakai produk ini... Firebase"></textarea>
+<div class="filebox-orange"><b style="font-size:12px;color:#ff8a00">📸 Upload Foto Ulasan (Max 3)</b><br><input type="file" id="ulasanGambarInput" accept="image/*" multiple onchange="setUlasanImages(this)" style="font-size:11px;margin-top:6px"><div id="ulasanGambarPreview" class="upload-preview"></div><small id="ulasanGambarInfo" style="color:#00e676;font-size:10px"></small></div>
+<button class="btn btn-orange" id="btnKirimUlasan" onclick="kirimUlasan()" style="margin-top:10px">⭐ KIRIM ULASAN FIREBASE</button>
+</div>
+<div id="listUlasan"></div>
+</div>
+<button class="btn btn-dark" style="margin-top:12px" onclick="closeModal()">TUTUP</button>
+</div></div>
+<div class="modal" id="modalWaiting"><div class="modal-box" style="text-align:center;border:2px solid #ff8a00"><div class="waiting-anim"></div><h2 style="color:#ff8a00">Menunggu ACC Firebase</h2><p id="waitNama"></p><img id="waitGambar" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin:10px 0"><p id="waitTime" style="font-size:11px;color:#ffea00"></p><p id="waitStatus" style="font-size:11px;color:#aaa;margin-top:6px">⏳ Auto cek ACC Firebase...</p><button class="btn btn-dark" onclick="closeWaiting()">TUTUP</button></div></div>
+<div class="modal" id="modalLink"><div class="modal-box" style="text-align:center;border:2px solid #00e676"><h2 style="color:#00e676">✅ DI-ACC! LINK FIREBASE!</h2><p id="s_nama" style="font-weight:bold;margin:10px 0"></p><img id="s_gambar" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin:10px 0"><div class="link-box"><p id="linkDownloadText" style="font-size:11px;background:#222;padding:10px;border-radius:8px;word-break:break-all;border:1px solid #00e676"></p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><button class="btn btn-blue" onclick="copyLink()">COPY</button><button class="btn btn-green" onclick="openLink()">BUKA LINK</button></div></div><button class="btn btn-green" onclick="downloadViaLink()" style="padding:14px">📥 DOWNLOAD</button><button class="btn btn-dark" onclick="closeLink()">TUTUP</button></div></div>
+<div class="modal" id="modalViewImg"><div class="modal-box" style="text-align:center;border:2px solid #ff8a00;max-width:95vw"><h3 style="color:#ff8a00;margin-bottom:10px">🖼️ Foto Ulasan</h3><img id="viewImg" style="width:100%;border-radius:12px;max-height:75vh;object-fit:contain;background:#000"><button class="btn btn-dark" onclick="closeViewImg()" style="margin-top:10px">TUTUP</button></div></div>
+<div class="help-fab" onclick="openHelp()">💬</div>
+<div class="bottom-nav">
+<div class="nav-item active" id="navBeranda" onclick="switchView('beranda')"><span class="nav-icon">🏠</span><span class="nav-label">Beranda</span></div>
+<div class="nav-item inactive" id="navRiwayat" onclick="switchView('riwayat')"><span class="nav-icon">📦</span><span class="nav-label">Riwayat</span></div>
+<div class="nav-item inactive" id="navProfile" onclick="switchView('profile')"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, push, set, update, remove, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAdaqbquQkTZeILPJI5sTOMgLrx0PxZVtk",
+  authDomain: "file-d7ce7.firebaseapp.com",
+  databaseURL: "https://file-d7ce7-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "file-d7ce7",
+  storageBucket: "file-d7ce7.firebasestorage.app",
+  messagingSenderId: "582881704672",
+  appId: "1:582881704672:web:69feddba7d711d8a21ee85"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+window._fbDB = db;
+window._fbRef = { ref, push, set, update, remove, get, onValue, query, orderByChild, equalTo };
+
+// GLOBAL STATE FIREBASE
+window.FB = { prods:{}, banners:{}, qris:null, orders:{}, ratings:{}, users:{}, helps:{} };
+
+// LISTEN ALL FIREBASE
+onValue(ref(db,'products'), snap=>{
+  window.FB.prods = snap.val()||{};
+  if(window.syncProds) window.syncProds(window.FB.prods);
+});
+onValue(ref(db,'banners'), snap=>{
+  window.FB.banners = snap.val()||{};
+  if(window.syncBanners) window.syncBanners(window.FB.banners);
+});
+onValue(ref(db,'qris'), snap=>{
+  let val=snap.val();
+  if(!val) return;
+  let obj = val.img? val : val[Object.keys(val)[0]];
+  window.FB.qris = obj;
+  if(window.syncQris) window.syncQris(obj);
+});
+onValue(ref(db,'orders'), snap=>{
+  window.FB.orders = snap.val()||{};
+  if(window.syncOrders) window.syncOrders(window.FB.orders);
+});
+onValue(ref(db,'ratings'), snap=>{
+  window.FB.ratings = snap.val()||{};
+  if(window.syncRatings) window.syncRatings(window.FB.ratings);
+});
+onValue(ref(db,'users'), snap=>{
+  window.FB.users = snap.val()||{};
+  if(window.syncUsers) window.syncUsers(window.FB.users);
+});
+
+document.getElementById('firebaseStatus').innerText='✅ Firebase file-d7ce7 100% LIVE - No LocalStorage';
+</script>
+
+<script>
+// 100% FIREBASE LOGIC
+let prods=[], qrisData=null, curProd=null, curBukti=null, currentUser=null;
+let waitingInterval=null, lastPendingId=null, currentLink=null, currentView='beranda';
+let lastShownLinkId = parseInt(localStorage.getItem('himz_lastShownLink')||'0');
+let filterStatus='all', tempRating=0, editAvatarData=null, tempUlasanImages=[];
+let bannerData=[], bannerIndex=0, bannerInterval=null, startX=0;
+const DEFAULT_LINK_FALLBACK='';
+const WA_NUMBER='628xxxx', WA_TEXT='Halo Admin', DISCORD_INVITE='https://discord.gg/dJZd5Rav';
+
+function showLoading(){document.getElementById('loadingBox').classList.add('active')}
+function hideLoading(){document.getElementById('loadingBox').classList.remove('active')}
+
+window.syncProds = function(fbObj){
+  let arr=Object.keys(fbObj).map(k=>({...fbObj[k], fbKey:k, id:fbObj[k].id||k}));
+  prods=arr;
+  let grid=document.getElementById('produkGrid');
+  if(arr.length==0){ grid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:40px;color:#888">Belum ada produk Firebase</p>'; document.getElementById('totalProduk').innerText='0 Produk'; hideLoading(); return; }
+  document.getElementById('totalProduk').innerText=arr.length+' Produk Firebase 100% - QRIS FIX';
+  document.getElementById('totalProdukBanner').innerText=arr.length+' Produk • Firebase 100% • Link lancar';
+  let h='';
+  arr.forEach(p=>{
+    let rat=getAvgRating(p.id||p.fbKey);
+    let stokColor=p.stock>10?'#00e676':p.stock>0?'#ffea00':'#ff1744';
+    h+=`<div class="card"><div class="img-wrap" onclick="openBeli('${p.fbKey}')"><img src="${p.gambar}" onerror="this.src='https://via.placeholder.com/200'"><span class="badge-stock" style="background:${stokColor}">${p.stock} Sisa</span><span class="badge-link">🔗 LINK FB</span>${rat.count>0?`<span style="position:absolute;bottom:8px;right:8px;background:#ffea00;color:#000;padding:3px 7px;border-radius:10px;font-size:10px;font-weight:bold">⭐ ${rat.avg}</span>`:''}</div><div style="padding:10px"><b>${p.name}</b><br><b style="color:#00e676">Rp ${parseInt(p.price||0).toLocaleString('id-ID')}</b><br><button class="btn btn-buy" onclick="openBeli('${p.fbKey}')">BELI - Stock ${p.stock}</button></div></div>`;
+  });
+  grid.innerHTML=h;
+  hideLoading();
+  updateUserBar();
+}
+window.syncBanners = function(fbObj){
+  let arr=Object.keys(fbObj).map(k=>fbObj[k]);
+  renderBanners(arr);
+}
+window.syncQris = function(q){
+  qrisData=q;
+  const img=document.getElementById('m_qris');
+  const nameT=document.getElementById('qrisNameText');
+  const debug=document.getElementById('qrisDebug');
+  if(q && q.img){
+    if(img){ img.src=q.img; img.style.display='block'; img.onerror=()=>{ debug.innerText='❌ Gambar QRIS error'; }; }
+    if(nameT) nameT.innerText=q.name||'Zero27Pedia OFFICIAL';
+    if(debug) debug.innerText='✅ QRIS Firebase 100% OK - '+q.name;
+  } else {
+    if(debug) debug.innerText='❌ QRIS belum ada di Firebase - Upload di Admin';
+  }
+}
+window.syncOrders = function(fbObj){
+  renderRiwayat();
+  cekACC();
+}
+window.syncRatings = function(fbObj){
+  renderUlasanList();
+}
+window.syncUsers = function(fbObj){
+  let sess=localStorage.getItem('firebase_currentUserKey');
+  if(sess && fbObj[sess]){
+    currentUser={...fbObj[sess], fbKey:sess};
+    updateUserBar();
+    renderProfile();
+  }
+}
+
+function renderBanners(banners){
+ let track=document.getElementById('bannerTrack');
+ let dots=document.getElementById('bannerDots');
+ if(!track||!dots) return;
+ if(!banners||banners.length===0){
+   track.innerHTML=`<div class="banner-slide" style="background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;text-align:center"><div><h1>🔥 Zero27Pedia STORE LINK 🔥</h1><p>${prods.length} Produk Firebase 100%</p></div></div>`;
+   dots.innerHTML='';
+   return;
+ }
+ bannerData=banners;
+ let h='';
+ banners.forEach((b,i)=>{
+   let img=b.img||b.gambar||'';
+   h+=`<div class="banner-slide" onclick="bannerClick(${i})"><img src="${img}"><div class="banner-badge">🔥 PROMO FB</div><div class="banner-overlay"><div class="banner-title">${b.title||''}</div><div class="banner-sub">${b.subtitle||''}</div></div></div>`;
+ });
+ track.innerHTML=h;
+ let dh=''; banners.forEach((_,i)=>{ dh+=`<div class="banner-dot ${i===0?'active':''}" onclick="goBanner(${i})"></div>`; });
+ dots.innerHTML=dh; bannerIndex=0; startBannerAuto();
+}
+function startBannerAuto(){ if(bannerInterval) clearInterval(bannerInterval); if(bannerData.length<=1) return; bannerInterval=setInterval(()=>{ nextBanner(); },3000); }
+function updateBannerPos(){ let track=document.getElementById('bannerTrack'); if(!track) return; track.style.transform=`translateX(-${bannerIndex*100}%)`; document.querySelectorAll('.banner-dot').forEach((d,i)=>d.classList.toggle('active', i===bannerIndex)); }
+function nextBanner(){ if(bannerData.length===0) return; bannerIndex=(bannerIndex+1)%bannerData.length; updateBannerPos(); }
+function prevBanner(){ if(bannerData.length===0) return; bannerIndex=(bannerIndex-1+bannerData.length)%bannerData.length; updateBannerPos(); }
+function goBanner(i){ bannerIndex=i; updateBannerPos(); startBannerAuto(); }
+function bannerClick(i){ let b=bannerData[i]; if(!b) return; if(b.link) window.open(b.link,'_blank'); else if(b.productId) openBeli(b.productId); }
+function initBannerSwipe(){ let cont=document.getElementById('bannerContainer'); if(!cont) return; cont.addEventListener('touchstart', e=>{ startX=e.touches[0].clientX; }); cont.addEventListener('touchend', e=>{ let diff=e.changedTouches[0].clientX-startX; if(diff>50) prevBanner(); else if(diff<-50) nextBanner(); }); }
+function switchView(view){ currentView=view; document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');n.classList.add('inactive');}); if(view=='beranda'){viewBeranda.classList.add('active');navBeranda.classList.add('active');} if(view=='riwayat'){viewRiwayat.classList.add('active');navRiwayat.classList.add('active');renderRiwayat();} if(view=='profile'){viewProfile.classList.add('active');navProfile.classList.add('active');renderProfile();} window.scrollTo(0,0); }
+function filterRiwayat(s){ filterStatus=s; document.querySelectorAll('.tab-r').forEach(t=>{t.classList.remove('active');t.classList.add('inactive');}); document.getElementById(s=='all'?'tabAll':s=='pending'?'tabPending':'tabApproved').classList.add('active'); renderRiwayat(); }
+
+function getAvgRating(pid){
+  let all=window.FB.ratings||{};
+  let list=Object.values(all).filter(r=>r.productId==pid || r.productFbKey==pid);
+  if(list.length==0) return {avg:0,count:0};
+  let avg=list.reduce((a,b)=>a+b.stars,0)/list.length;
+  return {avg:avg.toFixed(1),count:list.length};
+}
+
+function renderProfile(){
+ let div=document.getElementById('profileContent'); let emailP=document.getElementById('profileEmail');
+ if(!currentUser){emailP.innerText='Belum Login - Firebase'; div.innerHTML=`<div class="profile-card" style="text-align:center"><h2>🔒 Belum Login</h2><p>Login Firebase 100%</p><button class="btn btn-blue" onclick="openAuth()">LOGIN FIREBASE</button></div>`;return;}
+ emailP.innerText=currentUser.email+' - Firebase 100%';
+ let ordersAll=Object.values(window.FB.orders||{});
+ let myOrders=ordersAll.filter(o=>o.userId==currentUser.fbKey || o.userId==currentUser.id);
+ let totalBeli=myOrders.length;
+ let totalAcc=myOrders.filter(o=>o.status=='approved').length;
+ let totalPending=myOrders.filter(o=>o.status=='pending').length;
+ let avatarBig = currentUser.avatar? `<img src="${currentUser.avatar}" class="profile-avatar-big" onclick="openEditProfile()">` : `<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;font-size:36px;border:3px solid #ff8a00" onclick="openEditProfile()">${currentUser.name.charAt(0).toUpperCase()}</div>`;
+ div.innerHTML=`<div class="profile-card"><div style="display:flex;align-items:center;gap:12px">${avatarBig}<div><h3>${currentUser.name}</h3><small style="color:#00e676">${currentUser.email}</small><br><small>Firebase ID: ${currentUser.fbKey.substring(0,8)}...</small></div></div><div class="stat-row"><div class="stat-box"><b style="color:#ff8a00">${totalPending}</b><br><small>Pending FB</small></div><div class="stat-box"><b style="color:#00e676">${totalAcc}</b><br><small>Berhasil FB</small></div><div class="stat-box"><b>${totalBeli}</b><br><small>Total FB</small></div></div><button class="btn btn-red" onclick="doLogout()">LOGOUT FIREBASE</button><button class="btn btn-blue" style="margin-top:8px" onclick="openEditProfile()">✏️ EDIT PROFILE FIREBASE</button></div>`;
+}
+function renderRiwayat(){
+ let div=document.getElementById('riwayatList'); let count=document.getElementById('riwayatCount');
+ if(!currentUser){div.innerHTML='<p style="text-align:center;padding:30px;color:#888">🔒 Login Firebase dulu</p>';count.innerText='0 Transaksi';return;}
+ let allOrders=Object.values(window.FB.orders||{}).map((o,i)=>{ let k=Object.keys(window.FB.orders)[i]; return {...o, fbKey:k}; });
+ let myOrders=allOrders.filter(o=>o.userId==currentUser.fbKey || o.userId==currentUser.id).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(filterStatus!=='all') myOrders=myOrders.filter(o=>o.status===filterStatus);
+ count.innerText=myOrders.length+' Transaksi Firebase 100% ('+filterStatus.toUpperCase()+')';
+ if(myOrders.length==0){div.innerHTML='<p style="text-align:center;padding:40px;color:#888">Belum ada transaksi Firebase</p>';return;}
+ let h=''; myOrders.forEach(o=>{
+  let prod=prods.find(p=>p.fbKey==o.productFbKey || p.id==o.productId);
+  let col=o.status=='pending'?'#ff8a00':'#00e676';
+  h+=`<div class="history-card ${o.status}"><div style="display:flex;gap:10px"><img src="${prod?prod.gambar:''}" style="width:60px;height:60px;object-fit:cover;border-radius:8px"><div style="flex:1"><b>${o.product}</b><br><small>Rp ${parseInt(o.price).toLocaleString('id-ID')} • ${o.time}</small><br><small style="color:${col}">${o.status.toUpperCase()} - Firebase</small></div></div>${o.status=='approved'?`<button class="btn btn-green" style="margin-top:8px" onclick="openLinkFromHistory('${o.fbKey}')">🔗 LIHAT LINK FIREBASE - ${o.product}</button>`:''}</div>`;
+ });
+ div.innerHTML=h;
+}
+function openLinkFromHistory(fbKey){
+ let o=window.FB.orders[fbKey]; if(!o) return;
+ let prod=prods.find(p=>p.fbKey==o.productFbKey);
+ let link=o.downloadLink||prod?.fileLink;
+ if(!link) return alert('Link belum ada');
+ currentLink=link; s_nama.innerText=o.product; s_gambar.src=prod?prod.gambar:''; linkDownloadText.innerText=currentLink; modalLink.classList.add('active');
+}
+function bersihkanRiwayat(){ localStorage.removeItem('himz_lastShownLink'); alert('Local dibersihkan, Firebase tetap aman'); }
+function setEditAvatar(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ editAvatarData=e.target.result; editAvatarPreview.src=editAvatarData; editAvatarPreview.style.display='block'; editAvatarPlaceholder.style.display='none'; }; r.readAsDataURL(f); }
+function openEditProfile(){ if(!currentUser) return alert('Login dulu'); editNama.value=currentUser.name; editEmail.value=currentUser.email; editPass.value=''; editPass2.value=''; if(currentUser.avatar){ editAvatarPreview.src=currentUser.avatar; editAvatarPreview.style.display='block'; editAvatarPlaceholder.style.display='none'; editAvatarData=currentUser.avatar; } else { editAvatarPreview.style.display='none'; editAvatarPlaceholder.style.display='flex'; editAvatarData=null; } modalEditProfile.classList.add('active'); }
+function closeEditProfile(){ modalEditProfile.classList.remove('active'); }
+async function saveEditProfile(){
+ let n=editNama.value.trim(); let e=editEmail.value.trim().toLowerCase(); let p=editPass.value; let p2=editPass2.value;
+ if(!n||!e) return alert('Nama & Email wajib'); if(p&&p!==p2) return alert('Password beda');
+ const db=window._fbDB; const { ref, update }=window._fbRef;
+ let updates={ name:n, email:e };
+ if(p) updates.pass=btoa(p);
+ if(editAvatarData) updates.avatar=editAvatarData;
+ await update(ref(db,'users/'+currentUser.fbKey), updates);
+ closeEditProfile(); alert('✅ Profile Firebase updated');
+}
+function switchDetail(m){ secBeli.style.display=m=='beli'?'block':'none'; secUlasan.style.display=m=='ulasan'?'block':'none'; tabBeli.className=m=='beli'?'tab-d active':'tab-d inactive'; tabUlasan.className=m=='ulasan'?'tab-d active':'tab-d inactive'; if(m=='ulasan') renderUlasanList(); }
+function renderUlasanList(){
+ if(!curProd) return;
+ let all=window.FB.ratings||{};
+ let list=Object.values(all).filter(r=>r.productFbKey==curProd.fbKey || r.productId==curProd.id).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ let div=document.getElementById('listUlasan');
+ let avg=getAvgRating(curProd.fbKey);
+ m_ratingAvg.innerText=avg.count>0?`⭐ ${avg.avg} dari ${avg.count} ulasan Firebase`:'Belum ada ulasan Firebase';
+ document.getElementById('ulasanCountTab').innerText=avg.count;
+ if(list.length==0){div.innerHTML='<p style="text-align:center;color:#888;padding:20px">Belum ada ulasan Firebase</p>';return;}
+ let h=''; list.forEach(r=>{
+   let ava = r.avatar? `<img src="${r.avatar}" class="ulasan-avatar">` : `<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;font-weight:bold">${r.name.charAt(0).toUpperCase()}</div>`;
+   let imgs=''; if(r.images && r.images.length>0){ imgs='<div style="display:flex;flex-wrap:wrap;margin-top:6px">'; r.images.forEach(im=>{ imgs+=`<img src="${im}" class="ulasan-img-thumb" onclick="openViewImg('${im}')">`; }); imgs+='</div>'; }
+   h+=`<div class="ulasan-card">${ava}<div style="flex:1"><b>${r.name}</b> <small style="color:#aaa">${r.time||''}</small><br><div style="color:#ffea00">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div><small>${r.text}</small>${imgs}</div></div>`;
+ });
+ div.innerHTML=h;
+}
+function setRating(n){ tempRating=n; for(let i=1;i<=5;i++){ document.getElementById('star'+i).innerText = i<=n?'★':'☆'; document.getElementById('star'+i).style.color = i<=n?'#ffea00':'#555'; } document.getElementById('ratingText').innerText = n+' Bintang'; }
+function setUlasanImages(input){
+ let files=Array.from(input.files); if(files.length+tempUlasanImages.length>3) return alert('Max 3');
+ files.forEach(f=>{
+   let reader=new FileReader(); reader.onload=e=>{
+     let img=new Image(); img.onload=()=>{
+       let c=document.createElement('canvas'); let max=400, w=img.width,h=img.height;
+       if(w>h){ if(w>max){ h*=max/w; w=max; } }else{ if(h>max){ w*=max/h; h=max; } }
+       c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+       tempUlasanImages.push(c.toDataURL('image/jpeg',0.6)); renderUlasanPreview();
+     }; img.src=e.target.result;
+   }; reader.readAsDataURL(f);
+ });
+}
+function renderUlasanPreview(){ let div=document.getElementById('ulasanGambarPreview'); let h=''; tempUlasanImages.forEach((src,i)=>{ h+=`<div class="upload-item"><img src="${src}" style="width:60px;height:60px;border-radius:8px;object-fit:cover"><div class="upload-remove" onclick="tempUlasanImages.splice(${i},1);renderUlasanPreview()">x</div></div>`; }); div.innerHTML=h; }
+function openViewImg(src){ document.getElementById('viewImg').src=src; document.getElementById('modalViewImg').classList.add('active'); }
+function closeViewImg(){ document.getElementById('modalViewImg').classList.remove('active'); }
+async function kirimUlasan(){
+ if(!currentUser) return openAuth();
+ if(tempRating==0) return alert('Pilih bintang');
+ let txt=document.getElementById('ulasanText').value.trim(); if(!txt) return alert('Tulis ulasan');
+ const db=window._fbDB; const { ref, push }=window._fbRef;
+ let data={ productId:curProd.id, productFbKey:curProd.fbKey, name:currentUser.name, avatar:currentUser.avatar||null, userId:currentUser.fbKey, stars:tempRating, text:txt, time:new Date().toLocaleString('id-ID'), createdAt:Date.now(), images:tempUlasanImages };
+ await push(ref(db,'ratings'), data);
+ document.getElementById('ulasanText').value=''; tempRating=0; tempUlasanImages=[]; renderUlasanPreview();
+ for(let i=1;i<=5;i++){ document.getElementById('star'+i).innerText='☆'; }
+ alert('✅ Ulasan Firebase terkirim');
+}
+
+function openHelp(){ modalHelp.classList.add('active'); }
+function closeHelp(){ modalHelp.classList.remove('active'); }
+function hubungiWA(){ window.open('https://wa.me/628xxxx','_blank'); }
+function hubungiDiscord(){ window.open(DISCORD_INVITE,'_blank'); }
+function hubungiApp(){ closeHelp(); modalHelpApp.classList.add('active'); }
+function closeHelpApp(){ modalHelpApp.classList.remove('active'); }
+async function kirimHelpApp(){
+ let nama=document.getElementById('helpNama').value.trim(); let email=document.getElementById('helpEmail').value.trim(); let pesan=document.getElementById('helpPesan').value.trim();
+ if(!nama||!email||!pesan) return alert('Isi semua');
+ const db=window._fbDB; const { ref, push }=window._fbRef;
+ await push(ref(db,'helps'), {nama,email,pesan,kategori:document.getElementById('helpKategori').value,time:new Date().toLocaleString('id-ID'),userId:currentUser?currentUser.fbKey:null,createdAt:Date.now()});
+ closeHelpApp(); alert('✅ Bantuan terkirim Firebase');
+}
+function updateUserBar(){
+ let info=document.getElementById('userInfo'); let btn=document.getElementById('btnAuth');
+ if(currentUser){
+   let ava = currentUser.avatar? `<img src="${currentUser.avatar}" class="user-avatar">` : `<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(90deg,#ff0000,#ff8a00);display:flex;align-items:center;justify-content:center;font-weight:bold">${currentUser.name.charAt(0).toUpperCase()}</div>`;
+   info.innerHTML=`${ava}<div><b>👤 ${currentUser.name}</b><br><small style="font-size:10px">${currentUser.email} • FB</small></div>`;
+   btn.innerText='LOGOUT'; btn.className='btn btn-red'; btn.onclick=doLogout;
+ }else{info.innerHTML=`<b>👤 Belum Login - Firebase 100%</b>`; btn.innerText='LOGIN'; btn.className='btn btn-blue'; btn.onclick=openAuth;}
+}
+function openAuth(){modalAuth.classList.add('active')}function closeAuth(){modalAuth.classList.remove('active')}
+function switchAuth(t){secLogin.style.display=t=='login'?'block':'none'; secDaftar.style.display=t=='daftar'?'block':'none'; tabLogin.className=t=='login'?'tab-a active':'tab-a inactive'; tabDaftar.className=t=='daftar'?'tab-a active':'tab-a inactive';}
+
+async function doRegister(){
+ let n=document.getElementById('regNama').value.trim(), e=document.getElementById('regEmail').value.trim().toLowerCase(), p=document.getElementById('regPass').value, p2=document.getElementById('regPass2').value;
+ if(!n||!e||!p) return alert('Isi semua'); if(p!=p2) return alert('Beda');
+ const db=window._fbDB; const { ref, push, get, query, orderByChild, equalTo }=window._fbRef;
+ let q=query(ref(db,'users'), orderByChild('email'), equalTo(e));
+ let snap=await get(q);
+ if(snap.exists()) return alert('Email sudah ada di Firebase');
+ let newUser={name:n,email:e,pass:btoa(p),avatar:null,createdAt:Date.now()};
+ let res=await push(ref(db,'users'), newUser);
+ localStorage.setItem('firebase_currentUserKey', res.key);
+ currentUser={...newUser, fbKey:res.key};
+ closeAuth(); updateUserBar(); alert('✅ Daftar Firebase sukses 100%');
+}
+async function doLogin(){
+ let e=document.getElementById('loginEmail').value.trim().toLowerCase(), p=document.getElementById('loginPass').value;
+ const db=window._fbDB; const { ref, get, query, orderByChild, equalTo }=window._fbRef;
+ let q=query(ref(db,'users'), orderByChild('email'), equalTo(e));
+ let snap=await get(q);
+ if(!snap.exists()) return alert('Email tidak ada di Firebase');
+ let found=null, foundKey=null;
+ snap.forEach(child=>{ let v=child.val(); if(v.pass==btoa(p)){ found=v; foundKey=child.key; } });
+ if(!found) return alert('Password salah');
+ localStorage.setItem('firebase_currentUserKey', foundKey);
+ currentUser={...found, fbKey:foundKey};
+ closeAuth(); updateUserBar(); renderProfile(); renderRiwayat();
+}
+function doLogout(){ if(!confirm('Logout Firebase?'))return; localStorage.removeItem('firebase_currentUserKey'); currentUser=null; updateUserBar(); renderProfile(); switchView('beranda'); }
+
+function openBeli(fbKey){
+ let p=prods.find(x=>x.fbKey==fbKey); if(!p||p.stock<=0) return alert('Habis!');
+ curProd=p;
+ m_nama.innerText=p.name; m_price.innerText='Rp '+parseInt(p.price).toLocaleString('id-ID'); m_stock.innerText='Sisa '+p.stock;
+ m_gambar.src=p.gambar||'';
+ if(qrisData && qrisData.img){ m_qris.src=qrisData.img; m_qris.style.display='block'; document.getElementById('qrisNameText').innerText=qrisData.name||''; document.getElementById('qrisDebug').innerText='✅ QRIS Firebase 100% OK - '+qrisData.name; }
+ else { document.getElementById('qrisDebug').innerText='❌ QRIS belum ada - Upload di Admin Firebase'; }
+ curBukti=null; if(buktiPreview) buktiPreview.style.display='none'; if(buktiInfo) buktiInfo.innerText='Upload bukti Firebase';
+ modalBeli.classList.add('active'); switchDetail('beli'); renderUlasanList();
+}
+function setBukti(input){
+ let f=input.files[0]; if(!f) return;
+ let r=new FileReader(); r.onload=e=>{
+   let img=new Image(); img.onload=()=>{
+     let c=document.createElement('canvas'); let max=300, w=img.width,h=img.height;
+     if(w>h){ if(w>max){ h*=max/w; w=max; } }else{ if(h>max){ w*=max/h; h=max; } }
+     c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+     curBukti=c.toDataURL('image/jpeg',0.4);
+     buktiPreview.src=curBukti; buktiPreview.style.display='block'; buktiInfo.innerText=`✅ ${(curBukti.length/1024).toFixed(0)}KB Firebase`;
+   }; img.src=e.target.result;
+ }; r.readAsDataURL(f);
+}
+async function kirimBukti(){
+ if(!currentUser) return openAuth();
+ if(!curBukti) return alert('Upload bukti');
+ let btn=document.getElementById('btnKirimBukti'); btn.disabled=true; btn.innerText='⏳ Kirim Firebase...';
+ try{
+   const db=window._fbDB; const { ref, push }=window._fbRef;
+   let order={product:curProd.name,productId:curProd.id,productFbKey:curProd.fbKey,price:curProd.price,time:new Date().toLocaleString('id-ID'),bukti:curBukti,status:'pending',id:Date.now(),userId:currentUser.fbKey,userName:currentUser.name,downloadLink:curProd.fileLink||'',createdAt:Date.now()};
+   if(!order.downloadLink) return alert('Link produk belum di set admin Firebase');
+   let res=await push(ref(db,'orders'), order);
+   lastPendingId=res.key;
+   closeModal();
+   openWaitingModal(order);
+ }catch(e){ alert('Gagal Firebase: '+e.message); } finally { btn.disabled=false; btn.innerText='🚀 KIRIM BUKTI FIREBASE'; }
+}
+function openWaitingModal(order){
+ waitNama.innerText=order.product;
+ let p=prods.find(x=>x.fbKey==order.productFbKey);
+ waitGambar.src=p?p.gambar:''; waitTime.innerText='Waktu: '+order.time;
+ modalWaiting.classList.add('active');
+ if(waitingInterval) clearInterval(waitingInterval);
+ waitingInterval=setInterval(()=>{ cekACCWaiting(); },2000);
+}
+function closeWaiting(){ if(waitingInterval) clearInterval(waitingInterval); modalWaiting.classList.remove('active'); }
+function cekACCWaiting(){
+ if(!lastPendingId) return;
+ let o=window.FB.orders[lastPendingId];
+ if(o && o.status=='approved'){
+   clearInterval(waitingInterval); modalWaiting.classList.remove('active'); renderRiwayat(); showLinkModalFB(o);
+ }
+}
+function cekACC(){
+ if(!currentUser) return;
+ let all=Object.values(window.FB.orders||{}).map((o,i)=>{ let k=Object.keys(window.FB.orders)[i]; return {...o, fbKey:k}; });
+ let myApproved=all.filter(o=>(o.userId==currentUser.fbKey)&&o.status=='approved').sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(myApproved.length>0){
+   let latest=myApproved[0];
+   let now=Date.now();
+   if(now - (latest.createdAt||0) < 120000 && latest.fbKey!=localStorage.getItem('himz_lastShownLink')){
+     if(!modalLink.classList.contains('active') &&!modalWaiting.classList.contains('active')){
+       showLinkModalFB(latest);
+     }
+   }
+ }
+}
+function showLinkModalFB(order){
+ let prod=prods.find(p=>p.fbKey==order.productFbKey);
+ let link=order.downloadLink||prod?.fileLink;
+ if(!link) return;
+ currentLink=link; s_nama.innerText=order.product; s_gambar.src=prod?prod.gambar:''; linkDownloadText.innerText=currentLink;
+ modalLink.classList.add('active'); localStorage.setItem('himz_lastShownLink', order.fbKey);
+}
+function showLinkModal(order){ showLinkModalFB(order); }
+function copyLink(){ if(!currentLink) return; navigator.clipboard.writeText(currentLink).then(()=>alert('✅ COPY Firebase')); }
+function openLink(){ if(!currentLink) return; window.open(currentLink,'_blank'); }
+function closeLink(){ modalLink.classList.remove('active'); }
+function closeModal(){ modalBeli.classList.remove('active'); }
+function downloadViaLink(){ if(!currentLink) return; window.open(currentLink,'_blank'); }
+
+initBannerSwipe();
+setInterval(()=>{ cekACC(); },3000);
+
+// AUTO LOGIN FROM FIREBASE SESSION
+let sessKey=localStorage.getItem('firebase_currentUserKey');
+if(sessKey){
+  const db=window._fbDB; const { ref, get }=window._fbRef;
+  get(ref(db,'users/'+sessKey)).then(snap=>{
+    if(snap.exists()){
+      currentUser={...snap.val(), fbKey:sessKey};
+      updateUserBar();
+    }
+    hideLoading();
+  });
+} else {
+  setTimeout(()=>hideLoading(),2000);
+}
+</script></body></html>
